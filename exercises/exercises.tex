@@ -167,7 +167,7 @@
 	is the $2$-norm of vector $\bm{a}$.
 
 	As a special case, linear least square fitting assumes a linear functional form for the approximate mapping $\tilde{f}$, i.e.
-	\begin{equation}
+	\begin{equation}	\label{eq:lls_ansatz}
 		\tilde{f}(\bm{x})
 			= \mat{A}^{\tr{T}}\bm{x} + \bm{b},
 	\end{equation}
@@ -175,12 +175,12 @@
 
 	\begin{enumerate}
 		\item First let us consider an even simpler case, $\bm{b} = \bm{0}$. Show that $\mat{A}$ is determined by the following equation
-		\begin{equation}
+		\begin{equation}	\label{eq:lls_equation}
 			\mat{X} \mat{X}^{\tr{T}} \mat{A}
 				= \mat{X} \mat{Y}^{\tr{T}}
 		\end{equation}
 		where
-		\begin{equation}
+		\begin{equation}	\label{eq:data_set_def}
 			\mat{X}
 				= [\bm{x}^{(1)}, \bm{x}^{(2)}, \cdots{}, \bm{x}^{(N)}],\quad{}
 			\mat{Y}
@@ -223,6 +223,70 @@
 		\end{figure}
 
 		\item The example above is one-dimensional and trivial. A non-trivial multi-dimensional data set can be found in \ttt{X2.txt} and \ttt{Y2.txt}, where $\bm{x}^{(i)} \in \mathbb{R}^{5}$ and $\bm{y}^{(i)} \in \mathbb{R}^3$ and there are $20$ of them. Find an $\mat{A} \in \mathbb{R}^{5 \times{} 3}$ that minimizes the square loss. If you do the math correctly, the least square loss as defined in eqn (\ref{eq:lsloss}) should be $3.431402129330746$.
+	\end{enumerate}
+
+	\section{Non-linear fitting in terms of LLS}
+
+	The reason why linear least square (LLS) is important is that one can go beyond linear fitting by introducing basis functions.
+
+	To be specific, let us first specify the dimension for each quantity:
+	\begin{equation}
+		\bm{x} \in \mathbb{R}^n,\quad{}
+		\bm{y} \in \mathbb{R}^m,\quad{}
+		\tr{data set: }\{(\bm{x}^{(i)}, \bm{y}^{(i)})\}_{i = 1}^N.
+	\end{equation}
+	Now we introduce a basis function:
+	\begin{equation}
+	\begin{split}
+		\phi:&\, \mathbb{R}^n \to \mathbb{R}^l		\\
+			 &\, \bm{x} \to \bm{\phi} = \phi(\bm{x})
+	\end{split}
+	\end{equation}
+	For example, $\phi(x) = [x_1^2, x_2^2, x_1x_2]^{\tr{T}}$ is a basis function transforming a $\mathbb{R}^2$ vector $\bm{x} = [x_1, x_2]^{\tr{T}}$ to a $\mathbb{R}^3$ vector $\bm{\phi}$. With this in hands, our ansatz in eqn (\ref{eq:lls_ansatz}) needs to be modified
+	\begin{equation}	\label{eq:lls_ansatz_with_basis}
+		\tilde{f}(\bm{x})
+			= \mat{A}^{\tr{T}} \phi(\bm{x}) + \bm{b}
+	\end{equation}
+	and $\mat{A} \in \mathbb{R}^{l \times{} m}$.
+
+	Though eqn (\ref{eq:lls_ansatz_with_basis}) is still linear in $\bm{\phi}$, it does not need to be linear in $\bm{x}$ because the basis function could be non-linear. In this way, one can achieve non-linearity within the framework of LLS.
+
+	\begin{enumerate}
+		\item In a way similar to the derivation of eqn (\ref{eq:lls_equation}), show that $\mat{A}$ in eqn (\ref{eq:lls_ansatz_with_basis}) is determined by solving
+		\begin{equation}
+			\mat{\Phi} \mat{\Phi}^{\tr{T}} \mat{A}
+				= \mat{\Phi} \mat{Y}^{\tr{T}}
+		\end{equation}
+		where $\mat{Y}$ is defined in eqn (\ref{eq:data_set_def}), and
+		\begin{equation}
+			\mat{\Phi}
+				= [\bm{\phi}^{(1)}, \bm{\phi}^{(2)}, \cdots{}, \bm{\phi}^{(N)}].
+		\end{equation}
+
+		\item \textit{Polynomial basis}. LLS with basis function
+		\begin{equation}
+			\phi(x)
+				= [1, x, x^2, \cdots{}, x^{l-1}]
+		\end{equation}
+		is equivalent to fitting a polynomial of order $l-1$. Perform LLS fit with $l = 2, 4, 6$ and $8$ for data sets \ttt{X1.txt} and \ttt{Y1.txt} in \ttt{data/non\_linear\_least\_square}. Then
+		\begin{enumerate}
+			\item report the loss for each $l$ and
+			\item plot the fitted curves along with the data points
+		\end{enumerate}
+		What trend(s) do you observe? [\textit{Hint}: wrap the fitting process in a function that takes two matrices (in this special case, vectors) $\mat{X}$ and $\mat{Y}$ and the fitting order $l$ as input parameters.]
+
+		\item \textit{Polynomial basis (cnt'd)}. The data set above is generated as follows
+		\begin{equation}
+			y
+				= 1 - 2x + x^3 + g
+		\end{equation}
+		where $g \sim \mathcal{N}(0, 1)$ is a Gaussian random variable that mimics a random noise (from, e.g.\ measure error). Now plot your fitted curves and the original data points along with the ``real" solution (set $g = 0$).
+		\begin{enumerate}
+			\item Does it approach the ``real" solution for larger $l$?
+			\item Does a small loss always mean a \emph{good} fitting?
+		\end{enumerate}
+
+		\item \textit{Polynomial basis (cnt'd)}. By using more data points, we can have a more confident fitting. Data sets \ttt{X2.txt} and \ttt{Y2.txt} are generated in the same way, but of a much larger size! Now re-do all fittings with the new data and plot the fitted curves along with the ``real" solution, what new trend(s) do you observe?
 	\end{enumerate}
 
 \end{document}
