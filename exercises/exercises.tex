@@ -270,23 +270,44 @@
 		\end{equation}
 		is equivalent to fitting a polynomial of order $l-1$. Perform LLS fit with $l = 2, 4, 6$ and $8$ for data sets \ttt{X1.txt} and \ttt{Y1.txt} in \ttt{data/non\_linear\_least\_square}. Then
 		\begin{enumerate}
-			\item report the loss for each $l$ and
-			\item plot the fitted curves along with the data points
+			\item report the loss for each $l$
+			\item report the RMS of $\mat{A}$ for each $l$
+			\begin{equation}
+				\tr{RMS}\,\mat{A}
+					= \frac{1}{nm} \sum_{\mu}^n \sum_{\nu}^m A_{\mu\nu}^2
+					= \ttt{mean(sum(sum(A.*A)))}\qquad{}\tr{(In MATLAB)}
+			\end{equation}
+			\item plot all fitted curves along with the data points
 		\end{enumerate}
-		What trend(s) do you observe? [\textit{Hint}: wrap the fitting process in a function that takes two matrices (in this special case, vectors) $\mat{X}$ and $\mat{Y}$ and the fitting order $l$ as input parameters.]
+		What trend(s) do you observe?
+
+		\textit{Hint}: wrapping the fitting and plotting processes each in a function would make your life much easier. Specifically, they could be like
+		\begin{verbatim}
+		    A = lls_poly(X, Y, l)
+		        % X/Y: data sets; l: polynomial order
+		        % A: LLS coefficient matrix.
+		\end{verbatim}
+		and
+		\begin{verbatim}
+		    y = lls_poly_plot(x, A, l)
+		        % x: grid points for plotting (e.g. x = [-1.5:0.1:2.5])
+		        % A: optimized LLS coefficient matrix
+		        % l: polynomial order
+		        % y: function values on grid x, so that you can plot with plot(x, y)
+		\end{verbatim}
 
 		\item \textit{Polynomial basis (cnt'd)}. The data set above is generated as follows
 		\begin{equation}
 			y
 				= 1 - 2x + x^3 + g
 		\end{equation}
-		where $g \sim \mathcal{N}(0, 1)$ is a Gaussian random variable that mimics a random noise (from, e.g.\ measure error). Now plot your fitted curves and the original data points along with the ``real" solution (set $g = 0$).
+		for $x$ randomly drawn from $-1.5$ to $2$, where $g \sim \mathcal{N}(0, 1)$ is a Gaussian random variable that mimics a random noise (from, e.g.\ measure error). Now plot your fitted curves and the original data points along with the ``real" solution (set $g = 0$).
 		\begin{enumerate}
 			\item Does it approach the ``real" solution for larger $l$?
 			\item Does a small loss always mean a \emph{good} fitting?
 		\end{enumerate}
 
-		\item \textit{Polynomial basis (cnt'd)}. By using more data points, we can have a more confident fitting. Data sets \ttt{X2.txt} and \ttt{Y2.txt} are generated in the same way, but of a much larger size! Now re-do all fittings with the new data and plot the fitted curves along with the ``real" solution, what new trend(s) do you observe?
+		\item \textit{Polynomial basis (cnt'd)}. In the example above, we see how increasing the \emph{model complexity} (in this case, $l$) can result in \emph{overfitting}. However, by using more data points, we can have a more complex model without overfitting. Data sets \ttt{X2.txt} and \ttt{Y2.txt} are generated in the same way, but of a much larger size! Now re-do all fittings with the new data and plot the fitted curves along with the ``real" solution. What new trend(s) do you observe?
 	\end{enumerate}
 
 \end{document}
