@@ -308,6 +308,13 @@
 		\end{enumerate}
 
 		\item \textit{Polynomial basis (cnt'd)}. In the example above, we see how increasing the \emph{model complexity} (in this case, $l$) can result in \emph{overfitting}. However, by using more data points, we can have a more complex model without overfitting. Data sets \ttt{X2.txt} and \ttt{Y2.txt} are generated in the same way, but of a much larger size! Now re-do all fittings with the new data and plot the fitted curves along with the ``real" solution. What new trend(s) do you observe?
+
+		\item \textit{Sinusoidal basis}. Copy everything from \ttt{lls\_poly} to a new function named \ttt{lls\_sin} that uses the following basis
+		\begin{equation}
+			[1, \sin x, \cos x, \cdots{}, \sin (l-1)x, \cos (l-1)x]^{\tr{T}}
+		\end{equation}
+		for an order-$l$ fitting. Then re-do the fitting for $l = 2, 4, 6$ and $8$. Report variation of the loss as the model complexity increases. Plot all fitted curves along with the ``real" solution. Do you notice any artificial feature for large $l$?
 	\end{enumerate}
+
 
 \end{document}
