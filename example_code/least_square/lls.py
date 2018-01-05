@@ -44,22 +44,35 @@ if __name__ == "__main__":
     if len(sys.argv) != 3:
         print("Usage: dataX dataY")
         sys.exit(1)
-
+    
     # read data
     X = np.loadtxt(sys.argv[1])
     Y = np.loadtxt(sys.argv[2])
 
+    # sort data
+    if X.ndim == 1:
+        inds = np.argsort(X)
+        Xnew, Ynew = [], []
+        for i in inds:
+            Xnew.append(X[i])
+            Ynew.append(Y[i])
+        X = np.array(Xnew)
+        Y = np.array(Ynew)
+    
     # put data into the desired format
-    X = X.T
-    Y = Y.T
-
+    if X.ndim != 1:
+        X = X.T
+        Y = Y.T
+    
     # fit
     A = lls_fit(X, Y)
-
+    
     # predict
-    pred_Y = lls_predict(A, X)
-
+    x = np.arange(0, 20, 0.5)
+    pred_Y = lls_predict(A, x)
+    
     # plot and compare
-    pyplot.plot(X, Y, 'ko')
-    pyplot.plot(X, pred_Y, 'rs')
-    pyplot.show()
+    if X.ndim == 1:
+        pyplot.plot(X, Y, 'ko', label="data")
+        pyplot.plot(x, pred_Y, 'r', label='fitted')
+        pyplot.show()
